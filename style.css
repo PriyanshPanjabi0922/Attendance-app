@@ -1,0 +1,99 @@
+*{
+    padding:0px;
+    margin:0px;
+}
+
+body{
+    background-color:#1e293b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#card{
+    background-color: #334155;
+    margin-top: 20px;
+    width:600px;
+    height:auto;
+}
+#inputContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap:30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#input{
+    width:fit-content;
+    height:30px;
+}
+
+#addButton{
+    background-color: #4f46e5;
+    width:70px;
+    height:50px;
+    font-size: 1.1rem;
+}
+
+.subjectName{
+    color:#f8fafc;
+    font-size: 1.7rem;
+    font-weight: bolder;
+}
+
+#presentButton{
+    background-color: #22c55e;
+    width:70px;
+    height:30px;
+    font-size: 1rem;
+}
+
+#absentButton{
+    background-color: #ef4444;
+    width:70px;
+    height:30px;
+    font-size: 1rem;
+}
+
+#buttonContainer{
+    gap: 50px;
+    display:flex;
+    align-items: flex-end;
+}
+
+#subjectCardContainer{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width:300px;
+    height:200px;
+    padding:20px;
+    gap:20px;
+    background-color: #293b54f7;
+    border: 1px solid white;
+    margin: 20px;
+}
+
+#cardContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+}
+
+button:hover{
+    opacity: 0.7;
+    transform: scale(1.1);
+    transition:0.3s ease;
+}
+
+.Warning{
+    color: #facc15;
+}
+
+.Safe{
+    color:#22c55e;
+}
