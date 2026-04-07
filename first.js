@@ -2,6 +2,7 @@ const card = document.getElementById('card');
 const input = document.getElementById('input');
 const addButton = document.getElementById('addButton');
 
+
 addButton.addEventListener("click",(e)=>{
     e.preventDefault();
 
@@ -10,16 +11,20 @@ addButton.addEventListener("click",(e)=>{
     return;
    }
 
+    const subjectName = document.createElement('div');
+    subjectName.textContent = input.value.trim().toLowerCase();
+    input.value = "";
+
+    
     const cardContainer = document.createElement('div');
     const subjectCardContainer = document.createElement('div');
-
-    const subjectName = document.createElement('div');
-    subjectName.textContent = input.value;
 
     subjectName.className  = "subjectName";
 
     let presentClass = 0;
     let totalClass = 0;
+
+    
 
     const presentButton = document.createElement('button');
     presentButton.id = "presentButton";
@@ -56,11 +61,26 @@ addButton.addEventListener("click",(e)=>{
 
         renderFunction(presentClass,totalClass,Percentagetext,Requiredtext,Status,card);
     });
+
     
     subjectCardContainer.append(subjectName,buttonContainer,Percentagetext,Requiredtext,Status);
     subjectCardContainer.id  = "subjectCardContainer";
     cardContainer.append(subjectCardContainer);
     cardContainer.id = "cardContainer";
+
+    const allSubject = document.querySelectorAll('.subjectName');
+
+    const inputValue = input.value.trim().toLowerCase();
+
+    for(let i=0; i < allSubject.length; i++) {
+        const ExcistenceSubject = allSubject[i].textContent.trim().toLowerCase();
+        
+        if(ExcistenceSubject === inputValue) {
+            alert("don't Enter the Created Subject card!");
+            return;
+        }
+    }
+ 
 
     card.append(cardContainer);
 
@@ -70,6 +90,8 @@ function renderFunction(presentClass,totalClass,Percentagetext,Requiredtext,Stat
     const Percentage = Math.round((presentClass/totalClass)*100); 
 
  const Requireddays = Math.max(0,Math.ceil((0.75*totalClass-presentClass)/0.25));
+
+    
 
     if(Percentage>=75){  
         Status.textContent  =`Safe: Yor Attendance is higer then 75%`;
