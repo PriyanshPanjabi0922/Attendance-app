@@ -8,8 +8,6 @@ let subjectsData = []
 addButton.addEventListener("click",(e)=>{
     e.preventDefault();
 
-    
-
    if(!input.value.trim()){
     alert("Please enter Subject Name");
     return;
@@ -52,29 +50,24 @@ addButton.addEventListener("click",(e)=>{
     presentButton.addEventListener("click",(e)=>{
         presentClass++;
         totalClass++;
-        console.log("clicked");
+        console.log(presentClass,totalClass);
     
-        renderFunction(presentClass,totalClass,Percentagetext,Requiredtext,Status,card);
+        renderFunction(presentClass,totalClass,Percentagetext,Requiredtext,Status);
     });
 
     // absentButton event listener
     absentButton.addEventListener("click",(e)=>{
         totalClass++;
+        console.log(presentClass,totalClass);
 
-        renderFunction(presentClass,totalClass,Percentagetext,Requiredtext,Status,card);
+        renderFunction(presentClass,totalClass,Percentagetext,Requiredtext,Status);
     });
-
 
     
     subjectCardContainer.append(subjectName,buttonContainer,Percentagetext,Requiredtext,Status);
     subjectCardContainer.id  = "subjectCardContainer";
     cardContainer.append(subjectCardContainer);
     cardContainer.id = "cardContainer";
-
-    const allSubject = document.querySelectorAll('.subjectName');
-
-    const inputValue = input.value.trim().toLowerCase();
-
 
     input.value = "";
     card.append(cardContainer);
@@ -85,21 +78,17 @@ addButton.addEventListener("click",(e)=>{
         totalClass:0
 
     }
-
     console.log(subjectName);
     console.log(subjectsData);
 
    subjectsData.push(subjects);
-
-
+   saveSubject(presentButton,absentButton);
 });
 
-function renderFunction(presentClass,totalClass,Percentagetext,Requiredtext,Status,card) {
+function renderFunction(presentClass,totalClass,Percentagetext,Requiredtext,Status) {
     const Percentage = Math.round((presentClass/totalClass)*100); 
 
  const Requireddays = Math.max(0,Math.ceil((0.75*totalClass-presentClass)/0.25));
-
-    
 
     if(Percentage>=75){  
         Status.textContent  =`Safe: Yor Attendance is higer then 75%`;
@@ -110,7 +99,11 @@ function renderFunction(presentClass,totalClass,Percentagetext,Requiredtext,Stat
         Status.classList = "Warning";
     }
 
-    Percentagetext.textContent = `Percentage : ${Percentage}`;
+    Percentagetext.textContent = `Percentage : ${Percentage}%`;
     Requiredtext.textContent = `Required Day : ${Requireddays}`;
     
 };
+
+function saveSubject(presentButton,absentButton) {
+    localStorage.setItem("subjectsData",JSON.stringify(subjectsData));
+    }
