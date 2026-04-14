@@ -8,6 +8,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 #card{
@@ -24,6 +25,7 @@ body{
     gap:30px;
     margin-top: 10px;
     margin-bottom: 10px;
+    
 }
 #input{
     width:fit-content;
@@ -37,51 +39,68 @@ body{
     font-size: 1.1rem;
 }
 
-.subjectName{
-    color:#f8fafc;
-    font-size: 1.7rem;
-    font-weight: bolder;
-}
-
-#presentButton{
-    background-color: #22c55e;
-    width:70px;
-    height:30px;
-    font-size: 1rem;
-}
-
-#absentButton{
-    background-color: #ef4444;
-    width:70px;
-    height:30px;
-    font-size: 1rem;
-}
-
-#buttonContainer{
-    gap: 50px;
-    display:flex;
-    align-items: flex-end;
-}
 
 #subjectCardContainer{
+    background-color: transparent;
     display: flex;
     align-items: center;
     flex-direction: column;
-    width:300px;
-    height:200px;
+    width:auto;
     padding:20px;
     gap:20px;
-    background-color: #293b54f7;
-    border: 1px solid white;
+    border:none;
     margin: 20px;
 }
 
-#cardContainer{
-    display: flex;
+.subjectCard {
+    border: 2px solid white;
+    padding: 20px;
+    width: 300px;
+    background-color: #1e293b;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.subjectCard button {
+    margin: 10px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.subjectCard button:first-child {
+    background-color: #22c55e;
+}
+
+.subjectCard button:last-child {
+    background-color: #ef4444;
+}
+
+.subjectCard div {
+    margin: 5px 0;
+}
+
+.subjectCard h2 {
+    margin-bottom: 10px;
+    text-align: center;
+    color:white;
+
+}
+
+.percentageText{
+    color :#e2e8f0;
+    font-weight: 600px;
+}
+
+.RequiredText{
+    color: #94a3b8;
+}
+
+.ButtonContainer{
+    display:flex;
     justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    
+
 }
 
 button:hover{
@@ -90,13 +109,6 @@ button:hover{
     transition:0.3s ease;
 }
 
-.Percentagetext{
-    color:#f8fafc;
-}
-
-.Requiredtext{
-    color:#94a3b8;
-}
 
 .Warning{
     color: #facc15;
