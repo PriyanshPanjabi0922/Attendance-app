@@ -7,71 +7,75 @@ const STORAGE_KEY = "subjectsData";
 
 addButton.addEventListener("click",(e)=>{
     e.preventDefault();
+    
+    const name = input.value.trim().toLowerCase().replaceAll(/\s+/g,"  ");
+    
 
+    let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
     if(!input.value.trim()){
         alert("Please enter Subject Name");
         return;
     }
 
-    const name = input.value.trim().toLowerCase();
+    if(name.length>20){
+        alert("Too Long");
+        return;
+    }
+    const isDuplicate = subjectsData.some(subject => subject.name === name);
 
-    let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    if(isDuplicate){
+        alert("Already Use Subject Name!!");
+        return;
+    }
 
-    const newSubject = {
+    const ValidName  = /^[a-zA-Z\s]+$/;
+
+    if(!ValidName.test(name)) {
+        alert("Only Letter and Space is allowed!!");
+        return;
+    }
+
+     const newSubject = {
         name: name,
         presentClass: 0,
         totalClass: 0
     };
 
     subjectsData.push(newSubject);
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(subjectsData));
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(subjectsData));
-
-    let presentClass = 0;
-    let totalClass = 0;
+    createSubjectCard(newSubject);
 
     input.value = "";
 
+    addButton.disabled = true;
+
+    setTimeout(()=>{
+        addButton.disabled = false;
+    },500);
+
 });
 
-function calculateAttendance(presentclass,totalClass){
+function calculateAttendance(presentClass,totalClass){
     let Percentage;
     
     if(totalClass===0){
         Percentage =0;
     }else{
-        Percentage = Math.round((presentclass/totalClass)*100); 
+        Percentage = Math.round((presentClass/totalClass)*100); 
     }
     
-    const Requireddays = Math.max(0,Math.ceil((0.75*totalClass-presentclass)/0.25));
-     let Status; 
-    if(Percentage>=75){  
-        
-        Status  =`Safe: Yor Attendance is higer then 75%`;
-        Status.classList = "Safe";
-    } 
-    else {
-        Status = `Warning : Yor Attendance is Lower then 75%`;
-        Status.classList = "Warning";
-    }
-    return {Percentage,Status,Requireddays};
+    const Requireddays = Math.max(0,Math.ceil((0.75*totalClass-presentClass)/0.25));
+    return {Percentage,Requireddays};
 }
 
-function renderFunction(Percentage,Requireddays,Percentagetext,Requiredtext,Status) {
-   
-    Percentagetext.textContent = `Percentage : ${Percentage}%`;
-    Requiredtext.textContent = `Required Day : ${Requireddays}`;
-    subjectCardContainer.append(Percentagetext,Requiredtext,Status);
-    
-};
 function saveSubject(presentButton,absentButton) {
     localStorage.setItem("subjectsData",JSON.stringify(subjectsData));
 
     }
 
 function loadSubject(){
-
         const data = localStorage.getItem("subjectsData");
         if(!data) {
              return;
@@ -121,7 +125,7 @@ function createSubjectCard(subject){
     ? "Safe" 
     : "Warning";
 
-statusText.classList.remove("Safe", "Warning");  // 🔥 important
+statusText.classList.remove("Safe", "Warning");  
 
 statusText.classList.add(
     result.Percentage >= 75 ? "Safe" : "Warning"
@@ -141,7 +145,7 @@ statusText.classList.add(
     ? "Safe" 
     : "Warning";
 
-statusText.classList.remove("Safe", "Warning");  // 🔥 important
+statusText.classList.remove("Safe", "Warning");  
 
 statusText.classList.add(
     result.Percentage >= 75 ? "Safe" : "Warning"
@@ -162,12 +166,11 @@ statusText.classList.add(
     ? "Safe" 
     : "Warning";
 
-statusText.classList.remove("Safe", "Warning");  // 🔥 important
+statusText.classList.remove("Safe", "Warning"); 
 
 statusText.classList.add(
     result.Percentage >= 75 ? "Safe" : "Warning"
 );
-
    
    });
 
