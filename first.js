@@ -9,7 +9,6 @@ addButton.addEventListener("click",(e)=>{
     e.preventDefault();
     
     const name = input.value.trim().toLowerCase().replaceAll(/\s+/g,"  ");
-    
 
     let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
@@ -108,6 +107,10 @@ function createSubjectCard(subject){
    const AbsentButton = document.createElement('button');
    AbsentButton.textContent = "Absent";
 
+   const DeleteButton = document.createElement('button');
+   DeleteButton.textContent = "Delete";
+   DeleteButton.className= "DeleteButton";
+
    const ButtonContainer = document.createElement('div');
    ButtonContainer.append(PresentButton,AbsentButton);
    ButtonContainer.className = "ButtonContainer";
@@ -160,7 +163,7 @@ statusText.classList.add(
     const result = calculateAttendance(present,total);
 
     percentageText.textContent =`Percentage ${result.Percentage}%`;
-   RequiredText.textContent = `Required Days ${result.Requireddays}`;
+    RequiredText.textContent = `Required Days ${result.Requireddays}`;
    
    statusText.textContent = result.Percentage >= 75 
     ? "Safe" 
@@ -174,10 +177,20 @@ statusText.classList.add(
    
    });
 
-   divCard.append(Title,ButtonContainer,percentageText,RequiredText,statusText);
+   DeleteButton.addEventListener("click",(e)=>{
+        let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+        subjectsData = subjectsData.filter(s => s.name !== subject.name);
+
+        localStorage.setItem(STORAGE_KEY,JSON.stringify(subjectsData));
+        divCard.remove();
+   });
+
+   divCard.append(Title,ButtonContainer,percentageText,RequiredText,statusText,DeleteButton);
     subjectCardContainer.append(divCard);
         
 }
     window.onload = function() {
         loadSubject();
     };
+
