@@ -5,6 +5,82 @@ const subjectCardContainer = document.getElementById("subjectCardContainer");
 
 const STORAGE_KEY = "subjectsData";
 
+function unLockeSubject(name){
+  let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+  subjectsData = subjectsData.map(s => {
+    if(s.name === name) {
+      return {...s, isLocked:false,
+      };
+    }
+    return s;
+  });
+
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(subjectsData));
+  loadSubject();
+}
+
+
+  function upDataSubject(name,type){
+      let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+    subjectsData = subjectsData.map((s) => {
+      if (s.name === name) {
+        if(s.isLocked){
+          return s;
+        }
+          
+        if(type === "present"){
+          return {
+            ...s,
+            presentClass:s.presentClass+1,
+            totalClass:s.totalClass + 1, 
+            lastAction: "present",
+            isLocked:true,
+        };
+      }
+      if(type === "absent"){
+        return {
+            ...s,
+            totalClass:s.totalClass + 1, 
+            lastAction:"absent",
+            isLocked:true,
+        };
+
+      };
+
+    if(type === "Undo"){
+      if(s.lastAction=== "present"){
+        return {
+          ...s,
+          presentClass:Math.max(0,s.presentClass-1),
+          totalClass:Math.max(0,s.totalClass-1),
+          lastAction:null,
+          isLocked:true,
+        };
+      }
+
+      if(s.lastAction === "absent"){
+        return {
+          ...s,
+          totalClass:Math.max(0,s.totalClass-1),
+          lastAction:null,
+          isLocked:true,
+        };
+      }
+    }
+      
+  }
+        return s; 
+  });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(subjectsData));
+
+    loadSubject();
+    setTimeout(()=>{
+    unLockeSubject(name);
+  },500);
+  }
+
 addButton.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -40,6 +116,7 @@ addButton.addEventListener("click", (e) => {
     presentClass: 0,
     totalClass: 0,
     lastAction:null,
+    isLocked:false,
   };
 
   subjectsData.push(newSubject);
@@ -49,11 +126,6 @@ addButton.addEventListener("click", (e) => {
 
   input.value = "";
 
-  addButton.disabled = true;
-
-  setTimeout(() => {
-    addButton.disabled = false;
-  }, 500);
 });
 
 function calculateAttendance(presentClass, totalClass) {
@@ -130,9 +202,8 @@ function createSubjectCard(subject) {
 
   PresentButton.addEventListener("click", (e) => {
     e.preventDefault();
+  
     upDataSubject(subject.name,"present");
-
-    loadSubject();
 
     const result = calculateAttendance(present, total);
 
@@ -146,9 +217,8 @@ function createSubjectCard(subject) {
 
   AbsentButton.addEventListener("click", (e) => {
     e.preventDefault();
-    upDataSubject(subject.name,"absent");
 
-    loadSubject();
+    upDataSubject(subject.name,"absent");
 
     const result = calculateAttendance(present, total);
 
@@ -158,6 +228,7 @@ function createSubjectCard(subject) {
     statusText.textContent = result.Percentage >= 75 ? "Safe" : "Warning";
     statusText.classList.remove("Safe", "Warning");
     statusText.classList.add(result.Percentage >= 75 ? "Safe" : "Warning");
+
   });
 
   DeleteButton.addEventListener("click", (e) => {
@@ -170,60 +241,11 @@ function createSubjectCard(subject) {
   });
 
   UndoButton.addEventListener("click",(e)=>{
-    upDataSubject(subject.name,"Undo");
+    e.preventDefault();
+
+  upDataSubject(subject.name,"Undo");
+
   })
-
-  function upDataSubject(name,type){
-      let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-
-    subjectsData = subjectsData.map((s) => {
-      if (s.name === subject.name) {
-        if(type === "present"){
-          return {
-            ...s,
-            presentClass:s.presentClass+1,
-            totalClass:s.totalClass + 1, 
-            lastAction: "present",
-        };
-      }
-      if(type === "absent"){
-        return {
-            ...s,
-            totalClass:s.totalClass + 1, 
-            lastAction:"absent",
-        };
-
-      };
-
-    if(type === "Undo"){
-      if(s.lastAction=== "present"){
-        return {
-          ...s,
-          presentClass:Math.max(0,s.presentClass-1),
-          totalClass:Math.max(0,s.totalClass-1),
-          lastAction:null
-        };
-      }
-
-      if(s.lastAction === "absent"){
-        return {
-          ...s,
-          totalClass:Math.max(0,s.totalClass-1),
-          lastAction:null
-        };
-      }
-    }
-      
-        }
-        return s; 
-  });
-
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(subjectsData));
-
-    loadSubject();
-  }
-
   divCard.append(Title,ButtonContainer,percentageText,RequiredText,statusText,DeleteButton,UndoButton);
   subjectCardContainer.append(divCard);
 }
@@ -231,4 +253,3 @@ function createSubjectCard(subject) {
 window.onload = function () {
   loadSubject();
 };
-
