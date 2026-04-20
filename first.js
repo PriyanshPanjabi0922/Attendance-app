@@ -146,6 +146,7 @@ function loadSubject() {
   if (!data) {
     return;
   }
+
   let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   subjectCardContainer.innerHTML = "";
 
@@ -159,6 +160,28 @@ function createSubjectCard(subject) {
   let present = subject.presentClass;
   let total = subject.totalClass;
 
+  const PresentText= document.createElement('div');
+  const TotalText = document.createElement('div');
+
+  const value1 = document.createElement('span');
+  value1.textContent = present;
+  value1.className = "value";
+
+  const value2 = document.createElement('span');
+  value2.textContent = total;
+  value2.className = "value";
+
+  const label1= document.createElement('span');
+  label1.textContent = "Present Class:  ";
+  label1.className  = "label";
+
+  const label2 = document.createElement('span');
+  label2.textContent = "Total Class:   ";
+  label2.className  = "label";
+
+  PresentText.append(label1,value1);
+  TotalText.append(label2,value2);
+
   const result = calculateAttendance(present, total);
 
   const divCard = document.createElement("div");
@@ -169,9 +192,11 @@ function createSubjectCard(subject) {
 
   const PresentButton = document.createElement("button");
   PresentButton.textContent = "Present";
+  PresentButton.className = "PresentButton";
 
   const AbsentButton = document.createElement("button");
   AbsentButton.textContent = "Absent";
+  AbsentButton.className = "AbsentButton";
 
   const DeleteButton = document.createElement("button");
   DeleteButton.textContent = "Delete";
@@ -179,10 +204,15 @@ function createSubjectCard(subject) {
 
   const UndoButton  =document.createElement("button");;
   UndoButton.textContent = "Undo";
+  UndoButton.className = "UndoButton";
 
   const ButtonContainer = document.createElement("div");
   ButtonContainer.append(PresentButton, AbsentButton);
   ButtonContainer.className = "ButtonContainer";
+  
+  const ButtonContainer2 = document.createElement("div");
+  ButtonContainer2.append(DeleteButton, UndoButton); 
+  ButtonContainer2.className = "ButtonContainer";
 
   const percentageText = document.createElement("div");
   const RequiredText = document.createElement("div");
@@ -195,9 +225,7 @@ function createSubjectCard(subject) {
   RequiredText.className = "RequiredText";
 
   statusText.textContent = result.Percentage >= 75 ? "Safe" : "Warning";
-
   statusText.classList.remove("Safe", "Warning");
-
   statusText.classList.add(result.Percentage >= 75 ? "Safe" : "Warning");
 
   PresentButton.addEventListener("click", (e) => {
@@ -246,7 +274,7 @@ function createSubjectCard(subject) {
   upDataSubject(subject.name,"Undo");
 
   })
-  divCard.append(Title,ButtonContainer,percentageText,RequiredText,statusText,DeleteButton,UndoButton);
+  divCard.append(Title,ButtonContainer,PresentText,TotalText,percentageText,RequiredText,statusText,ButtonContainer2);
   subjectCardContainer.append(divCard);
 }
 
