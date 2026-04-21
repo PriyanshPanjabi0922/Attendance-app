@@ -23,13 +23,12 @@ body{
     align-items: center;
     flex-direction: column;
     gap:30px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin:20px;
     
 }
 #input{
     width:fit-content;
-    height:30px;
+    height:40px;
 }
 
 #addButton{
@@ -143,14 +142,27 @@ button:hover{
     transition:0.3s ease;
 }
 
-
 .Warning{
     color: #facc15;
-    font-size:1.1rem;
+    
+}
+
+.buckMessage{
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
+.Warning1{
+    color: #facc15;
+    
 }
 
 .Safe{
     color:#22c55e;
-    font-size:1.3rem;
     font-weight: bold;
 }
+
+.Danger{
+    color:#f87171;
+}
+
