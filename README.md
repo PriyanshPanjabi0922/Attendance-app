@@ -1,23 +1,41 @@
-📊 Attendance Tracker App
+# 📊 Attendance Tracker App
 
-A simple attendance tracking app built using HTML, CSS, and JavaScript.
-
-This project helps track attendance and calculate how many classes are needed to reach the required percentage.
+A simple and practical web app to track attendance and make smart decisions about class attendance.
 
 ---
 
-✨ Features
+## 🚀 Live Demo
+👉 [Click Here](https://priyanshpanjabi0922.github.io/Attendance-app/)
+
+---
+
+## 📸 Preview
+(./images/AttendanceAppScreenshot.png)
+
+---
+
+## ✨ Features
 
 - Add subjects
-- Mark attendance (Present / Absent)
-- Track total classes
-- Calculate attendance percentage
-- Show required classes to reach 75%
-- Display status (Safe / Warning)
+- Mark Present / Absent
+- Undo last action
+- Reset attendance
+- Delete subject
+- Attendance percentage calculation
+- Bunk Calculator (decision-based insight)
 
 ---
 
-🛠 Tech Stack
+## 🧠 Key Learning
+
+- State management using localStorage
+- UI + Logic separation
+- Handling edge cases (>, =, < 75%)
+- Preventing rapid actions using lock system
+
+---
+
+## 🛠 Tech Stack
 
 - HTML
 - CSS
@@ -25,20 +43,8 @@ This project helps track attendance and calculate how many classes are needed to
 
 ---
 
-🧠 What I Learned
+## 📌 Future Improvements
 
-- Handling dynamic UI updates
-- Managing state (present / total classes)
-- Writing calculation logic
-- Debugging errors and improving code structure
-
----
-
-🔮 Future Improvements
-
-- Prevent duplicate subjects
-- Add local storage
-- Improve UI design
-- Add animations
-
----
+- Edit subject name
+- Better UI polish
+- Mobile responsiveness
