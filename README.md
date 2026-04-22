@@ -10,7 +10,8 @@ A simple and practical web app to track attendance and make smart decisions abou
 ---
 
 ## 📸 Preview
-(./images/AttendanceAppScreenshot.png)
+
+[Preview](./AttendanceAppScreenshot.png)
 
 ---
 
