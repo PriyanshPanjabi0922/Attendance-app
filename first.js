@@ -13,10 +13,9 @@ function unLockeSubject(name) {
       return { ...s, isLocked: false };
     }
     return s;
-  },600);
+  }, 600);
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(subjectsData));
-
 }
 
 function upDataSubject(name, type) {
@@ -65,6 +64,16 @@ function upDataSubject(name, type) {
             isLocked: true,
           };
         }
+      }
+
+      if (type === "reset") {
+        return {
+          ...s,
+          presentClass: 0,
+          totalClass: 0,
+          isLocked: false,
+          lastAction: null,
+        };
       }
     }
     return s;
@@ -142,22 +151,21 @@ function BunkCalcultor(present, total, target = 75) {
   if (BunkPercentage > target) {
     const bunk = Math.floor(present / (target / 100) - total);
     return { Message: `you can Bunk ${bunk} Class`, type: "Safe" };
-
   } else if (BunkPercentage === target) {
-    return { Message: "You cannot Bunk Any Class",  type: "Warning"};
+    return { Message: "You cannot Bunk Any Class", type: "Warning" };
   } else {
     const Requireddays = Math.max(
       0,
       Math.ceil((0.75 * total - present) / 0.25)
     );
     return {
-      Message: `You need to Attend ${Requireddays} Class to reach 75% `, type:"Danger"
+      Message: `You need to Attend ${Requireddays} Class to reach 75% `,
+      type: "Danger",
     };
   }
 }
 
 function loadSubject() {
-
   const data = localStorage.getItem("subjectsData");
   if (!data) {
     return;
@@ -233,8 +241,12 @@ function createSubjectCard(subject) {
   ButtonContainer.append(PresentButton, AbsentButton);
   ButtonContainer.className = "ButtonContainer";
 
+  const resetButton = document.createElement("button");
+  resetButton.textContent = "Reset";
+  resetButton.className = "resetButton";
+
   const ButtonContainer2 = document.createElement("div");
-  ButtonContainer2.append(DeleteButton, UndoButton);
+  ButtonContainer2.append(UndoButton, resetButton,DeleteButton, );
   ButtonContainer2.className = "ButtonContainer";
 
   const percentageText = document.createElement("div");
@@ -272,6 +284,11 @@ function createSubjectCard(subject) {
     e.preventDefault();
 
     upDataSubject(subject.name, "Undo");
+  });
+
+  resetButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    upDataSubject(subject.name, "reset");
   });
   divCard.append(
     Title,
