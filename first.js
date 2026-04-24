@@ -21,7 +21,7 @@ function unLockeSubject(name) {
 function upDataSubject(name, type) {
   let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
-  subjectsData = subjectsData.map((s) => {
+  subjectsData = subjectsData.map((s) =>{
     if (s.name === name) {
       if (s.isLocked) {
         return s;
@@ -78,7 +78,7 @@ function upDataSubject(name, type) {
     }
     return s;
   });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(subjectsData));
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(subjectsData));
 
   loadSubject();
   setTimeout(() => {
@@ -117,6 +117,7 @@ addButton.addEventListener("click", (e) => {
   }
 
   const newSubject = {
+    id:Date.now(),
     name: name,
     presentClass: 0,
     totalClass: 0,
@@ -126,6 +127,8 @@ addButton.addEventListener("click", (e) => {
 
   subjectsData.push(newSubject);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(subjectsData));
+
+  console.log("saved Data",localStorage.getItem(STORAGE_KEY));
 
   createSubjectCard(newSubject);
 
@@ -166,17 +169,13 @@ function BunkCalcultor(present, total, target = 75) {
 }
 
 function loadSubject() {
-  const data = localStorage.getItem("subjectsData");
-  if (!data) {
-    return;
-  }
-
   let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
   subjectCardContainer.innerHTML = "";
 
-  for (let subject of subjectsData) {
+  subjectsData.forEach(subject => {
     createSubjectCard(subject);
-  }
+  });
 }
 
 function createSubjectCard(subject) {
@@ -237,6 +236,10 @@ function createSubjectCard(subject) {
   UndoButton.textContent = "Undo";
   UndoButton.className = "UndoButton";
 
+  const EditButton = document.createElement("button");
+  EditButton.textContent = "Edit";
+  EditButton.className = "EditButton";
+
   const ButtonContainer = document.createElement("div");
   ButtonContainer.append(PresentButton, AbsentButton);
   ButtonContainer.className = "ButtonContainer";
@@ -246,7 +249,7 @@ function createSubjectCard(subject) {
   resetButton.className = "resetButton";
 
   const ButtonContainer2 = document.createElement("div");
-  ButtonContainer2.append(UndoButton, resetButton,DeleteButton, );
+  ButtonContainer2.append(UndoButton, resetButton, DeleteButton,EditButton);
   ButtonContainer2.className = "ButtonContainer";
 
   const percentageText = document.createElement("div");
@@ -290,6 +293,70 @@ function createSubjectCard(subject) {
     e.preventDefault();
     upDataSubject(subject.name, "reset");
   });
+
+  
+  EditButton.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    console.log("Edit is Click");
+
+    Title.style.display = "none";
+
+    const input2 = document.createElement("input");
+    input2.value = subject.name;
+    input2.id = "input2";
+
+
+  const SaveButton = document.createElement("button");
+  SaveButton.textContent = "Save";
+  SaveButton.className = "SaveButton";
+
+  const CancelButton = document.createElement("button");
+  CancelButton.textContent = "Cancel";
+  CancelButton.className = "CancelButton";
+
+  const EditButtonContainer = document.createElement('div');
+  EditButtonContainer.className = "EditButtonContainer";
+  EditButtonContainer.append(SaveButton,CancelButton);
+
+    SaveButton.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      console.log("Save btn click");
+
+      subject.name = input2.value;
+  
+      let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      
+      const index = subjectsData.findIndex( s=> s.id === subject.id
+      );
+
+      if(index!== -1){
+        subjectsData[index].name =input2.value;
+      }
+
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(subjectsData));
+      loadSubject();
+
+    });
+
+    CancelButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      console.log("cancel btn click");
+      loadSubject();
+
+    });
+
+    const editWrapper = document.createElement('div');
+    editWrapper.className = "editWrapper";
+
+  editWrapper.append(input2,EditButtonContainer);
+  Title.replaceWith(editWrapper);
+  EditButton.remove();
+
+  });
+
+
   divCard.append(
     Title,
     ButtonContainer,
