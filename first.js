@@ -21,7 +21,7 @@ function unLockeSubject(name) {
 function upDataSubject(name, type) {
   let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
-  subjectsData = subjectsData.map((s) =>{
+  subjectsData = subjectsData.map((s) => {
     if (s.name === name) {
       if (s.isLocked) {
         return s;
@@ -78,7 +78,7 @@ function upDataSubject(name, type) {
     }
     return s;
   });
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(subjectsData));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(subjectsData));
 
   loadSubject();
   setTimeout(() => {
@@ -117,7 +117,7 @@ addButton.addEventListener("click", (e) => {
   }
 
   const newSubject = {
-    id:Date.now(),
+    id: Date.now(),
     name: name,
     presentClass: 0,
     totalClass: 0,
@@ -127,8 +127,6 @@ addButton.addEventListener("click", (e) => {
 
   subjectsData.push(newSubject);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(subjectsData));
-
-  console.log("saved Data",localStorage.getItem(STORAGE_KEY));
 
   createSubjectCard(newSubject);
 
@@ -153,16 +151,16 @@ function BunkCalcultor(present, total, target = 75) {
 
   if (BunkPercentage > target) {
     const bunk = Math.floor(present / (target / 100) - total);
-    return { Message: `you can Bunk ${bunk} Class`, type: "Safe" };
+    return { Message: `you can bunk ${bunk} Class`, type: "Safe" };
   } else if (BunkPercentage === target) {
-    return { Message: "You cannot Bunk Any Class", type: "Warning" };
+    return { Message: "You cannot bunk Any Class", type: "Warning" };
   } else {
     const Requireddays = Math.max(
       0,
       Math.ceil((0.75 * total - present) / 0.25)
     );
     return {
-      Message: `You need to Attend ${Requireddays} Class to reach 75% `,
+      Message: `You need to attend ${Requireddays} Class to reach 75% `,
       type: "Danger",
     };
   }
@@ -173,7 +171,7 @@ function loadSubject() {
 
   subjectCardContainer.innerHTML = "";
 
-  subjectsData.forEach(subject => {
+  subjectsData.forEach((subject) => {
     createSubjectCard(subject);
   });
 }
@@ -249,7 +247,7 @@ function createSubjectCard(subject) {
   resetButton.className = "resetButton";
 
   const ButtonContainer2 = document.createElement("div");
-  ButtonContainer2.append(UndoButton, resetButton, DeleteButton,EditButton);
+  ButtonContainer2.append(UndoButton, resetButton, DeleteButton, EditButton);
   ButtonContainer2.className = "ButtonContainer";
 
   const percentageText = document.createElement("div");
@@ -258,9 +256,10 @@ function createSubjectCard(subject) {
   percentageText.textContent = `Percentage ${result.Percentage}%`;
   percentageText.className = "percentageText";
 
-  statusText.textContent = result.Percentage >= 75 ? "Safe" : "Warning";
-  statusText.classList.remove("Safe", "Warning1");
-  statusText.classList.add(result.Percentage >= 75 ? "Safe" : "Warning1");
+  statusText.textContent = BunkClassInsight.type;
+
+  statusText.classList.remove("Safe","Warning","Danger");
+  statusText.classList.add(BunkClassInsight.type);
 
   PresentButton.addEventListener("click", (e) => {
     e.preventDefault();
@@ -294,11 +293,8 @@ function createSubjectCard(subject) {
     upDataSubject(subject.name, "reset");
   });
 
-  
   EditButton.addEventListener("click", (e) => {
     e.preventDefault();
-
-    console.log("Edit is Click");
 
     Title.style.display = "none";
 
@@ -306,56 +302,74 @@ function createSubjectCard(subject) {
     input2.value = subject.name;
     input2.id = "input2";
 
+    const SaveButton = document.createElement("button");
+    SaveButton.textContent = "Save";
+    SaveButton.className = "SaveButton";
 
-  const SaveButton = document.createElement("button");
-  SaveButton.textContent = "Save";
-  SaveButton.className = "SaveButton";
+    const CancelButton = document.createElement("button");
+    CancelButton.textContent = "Cancel";
+    CancelButton.className = "CancelButton";
 
-  const CancelButton = document.createElement("button");
-  CancelButton.textContent = "Cancel";
-  CancelButton.className = "CancelButton";
-
-  const EditButtonContainer = document.createElement('div');
-  EditButtonContainer.className = "EditButtonContainer";
-  EditButtonContainer.append(SaveButton,CancelButton);
+    const EditButtonContainer = document.createElement("div");
+    EditButtonContainer.className = "EditButtonContainer";
+    EditButtonContainer.append(SaveButton, CancelButton);
 
     SaveButton.addEventListener("click", (e) => {
       e.preventDefault();
 
-      console.log("Save btn click");
-
-      subject.name = input2.value;
-  
       let subjectsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      
-      const index = subjectsData.findIndex( s=> s.id === subject.id
-      );
+      const name = input2.value.trim().toLowerCase().replace(/\s+/g, " ");
 
-      if(index!== -1){
-        subjectsData[index].name =input2.value;
+      if (!name) {
+        alert("Please enter Subject Name");
+        return;
       }
 
-      localStorage.setItem(STORAGE_KEY,JSON.stringify(subjectsData));
-      loadSubject();
+      if (name.length > 20) {
+        alert("Too Long");
+        return;
+      }
 
+      const isDuplicate = subjectsData.some(
+        (s) => s.name === name && s.id !== subject.id
+      );
+
+      if (isDuplicate) {
+        alert("Already Use Subject Name!!");
+
+        return;
+      }
+
+      const ValidName = /^[a-zA-Z\s]+$/;
+
+      if (!ValidName.test(name)) {
+        alert("Only Letter and Space is allowed!!");
+        return;
+      }
+      subject.name = input2.value;
+
+      const index = subjectsData.findIndex((s) => s.id === subject.id);
+
+      if (index !== -1) {
+        subjectsData[index].name = input2.value;
+      }
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(subjectsData));
+      loadSubject();
     });
 
     CancelButton.addEventListener("click", (e) => {
       e.preventDefault();
-      console.log("cancel btn click");
       loadSubject();
-
     });
 
-    const editWrapper = document.createElement('div');
+    const editWrapper = document.createElement("div");
     editWrapper.className = "editWrapper";
 
-  editWrapper.append(input2,EditButtonContainer);
-  Title.replaceWith(editWrapper);
-  EditButton.remove();
-
+    editWrapper.append(input2, EditButtonContainer);
+    Title.replaceWith(editWrapper);
+    EditButton.remove();
   });
-
 
   divCard.append(
     Title,
@@ -373,3 +387,4 @@ function createSubjectCard(subject) {
 window.onload = function () {
   loadSubject();
 };
+
