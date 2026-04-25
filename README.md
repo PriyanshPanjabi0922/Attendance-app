@@ -93,4 +93,4 @@ Attendance is calculated dynamically and categorized into:
 
 ## ✨ Author
 
-Your Name
+Priyansh Panjabi
